@@ -262,24 +262,25 @@ namespace Tekken_7_Player_Displayer
                 Gui.PrintLineToGuiConsole("Tried opening map, but opponent location is empty.");
                 return;
             }
-            //                                                                                             v Centered in eu with zoomout
-            string url = $"https://www.google.com/maps/place/{HttpUtility.UrlEncode(Gui.opponentLocation)}/@53.2078163,5.3910686,4.29z";
-            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            //                                                                                                                         v Centered in eu with zoomout
+            string url = $"https://www.google.com/maps/place/{HttpUtility.UrlEncode(Gui.opponentLocation)}/{HttpUtility.UrlEncode("@")}53.2078163,5.3910686,4.29z";
+            Uri uri = new Uri(url);
+            if (!uri.IsAbsoluteUri)
             {
                 Gui.PrintLineToGuiConsole("Warning: malformed location URL, not trying open.");
                 return;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Process.Start(new ProcessStartInfo { CreateNoWindow = true, FileName = url, UseShellExecute = true });
+                Process.Start(new ProcessStartInfo { CreateNoWindow = true, FileName = uri.AbsoluteUri, UseShellExecute = true });
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                Process.Start("xdg-open", url);
+                Process.Start("xdg-open", uri.AbsoluteUri);
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                Process.Start("open", url);
+                Process.Start("open", uri.AbsoluteUri);
             }
             else
             {
