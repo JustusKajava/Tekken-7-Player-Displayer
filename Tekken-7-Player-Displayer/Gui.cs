@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
+using System.Web;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -11,6 +13,7 @@ namespace Tekken_7_Player_Displayer
 {
     class Gui
     {
+        public static string opponentLocation = "";
         public static void PrintLineToGuiConsole(string text)
         {
             PrintToGuiConsole($"{text}\r\n");
@@ -156,6 +159,7 @@ namespace Tekken_7_Player_Displayer
 
         public static void SetLocationInGui(string location)
         {
+            opponentLocation = location;
             MainWindow.mainWindow.Dispatcher.BeginInvoke(new Action(() =>
             {
                 MainWindow.mainWindow.guiLocation.Text = location;
@@ -248,6 +252,38 @@ namespace Tekken_7_Player_Displayer
             while (true)
             { // let the program sleep.... forever
                 Thread.Sleep(10000);
+            }
+        }
+
+        public static void OpenOpponentLocationInGoogleMaps()
+        {
+            if (Gui.opponentLocation == "" || Gui.opponentLocation == "?")
+            {
+                Gui.PrintLineToGuiConsole("Tried opening map, but opponent location is empty.");
+                return;
+            }
+            //                                                                                             v Centered in eu with zoomout
+            string url = $"https://www.google.com/maps/place/{HttpUtility.UrlEncode(Gui.opponentLocation)}/@53.2078163,5.3910686,4.29z";
+            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            {
+                Gui.PrintLineToGuiConsole("Warning: malformed location URL, not trying open.");
+                return;
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Process.Start(new ProcessStartInfo { CreateNoWindow = true, FileName = url, UseShellExecute = true });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("xdg-open", url);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Process.Start("open", url);
+            }
+            else
+            {
+                throw new Exception("Unknown OS couldn't open website");
             }
         }
     }

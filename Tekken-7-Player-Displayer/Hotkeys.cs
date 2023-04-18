@@ -54,6 +54,7 @@ namespace Tekken_7_Player_Displayer
         private const int KEY_S = 0x53;
         private const int KEY_L = 0x4C;
         private const int KEY_U = 0x55;
+        private const int KEY_M = 0x4D;
 
         private static IntPtr hHook;
         private static HookProc hookProc;
@@ -79,6 +80,12 @@ namespace Tekken_7_Player_Displayer
             AddHotkey(ALT, KEY_S, () => HandleKeysPressed_ALT_S());
             AddHotkey(ALT, KEY_L, () => HandleKeysPressed_ALT_L());
             AddHotkey(ALT, KEY_U, () => HandleKeysPressed_ALT_U());
+            AddHotkey(ALT, KEY_M, () => HandleKeysPressed_ALT_M());
+        }
+
+        private static void HandleKeysPressed_ALT_M()
+        {
+            Gui.OpenOpponentLocationInGoogleMaps();
         }
 
         public static bool Enable()

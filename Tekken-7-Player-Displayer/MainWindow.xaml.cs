@@ -1,11 +1,9 @@
 ﻿using Steamworks;
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Windows;
-using System.Collections.Generic;
 
 namespace Tekken_7_Player_Displayer
 {
@@ -289,6 +287,11 @@ namespace Tekken_7_Player_Displayer
             }
             Gui.PrintPlayerLobbyInfoList(MainWindow.ListOfPlayerLobbies);
             //Gui.RefreshPlayerLobbyInfoDropDownMenu(); //JoinLobby()
+        }
+
+        private void Border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Gui.OpenOpponentLocationInGoogleMaps();
         }
 
         // JoinLobby()
